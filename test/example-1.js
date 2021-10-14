@@ -1,11 +1,11 @@
 const ActorSys =  require("../src/main.js");
 
 Behaviors = {
-  "add":ActorSys.Behavior.init((actor, message, resolve, reject) => {
+  "add":ActorSys.Behavior.init(function (actor, message, resolve, reject) {
     let content = message.content();
-    setTimeout(function () {
+    setTimeout(() => {
       console.log(content.x + content.y);
-      resolve(Behaviors.add);
+      resolve(this);
     }, 1000);
   }),
   "addTo": (x) => ActorSys.Behavior.init((actor, message, resolve, reject) => {
@@ -19,17 +19,38 @@ Behaviors = {
     let content = message.content();
     setTimeout(function () {
       console.log(content.x + content.y);
-
     }, 1000);
   }),
+  "adder":ActorSys.Behavior.init(function (actor, message, resolve, reject) {
+    resolve(Behaviors.sum(message.content()))
+  }),
+  "sum":(x) => ActorSys.Behavior.init(function (actor, message, resolve, reject) {
+    message.content(val=>{
+      if (val === "print") {
+        console.log(x);
+        resolve(Behaviors.adder);
+      } else {
+        resolve(Behaviors.sum(x+message.content()));
+      }
+    })
+  })
 }
 
 System = ActorSys.Actor.init()
-  .spawn("add5", Behaviors.addTo(5))
-  .send("add5", 10)
-  .send("add5", 20)
-
-System2 = ActorSys.Actor.init()
-  .spawn("add3", Behaviors.addTo(3))
-  .send("add3", 20)
-  .send("add3", 20)
+  .spawn("foreward", function (actor, message, resolve, reject) {
+    message.content(([address, value]) => {
+      message.customer().send(address, value)
+      resolve(this);
+    })
+  })
+  .spawn("print", function (actor, message, resolve, reject) {
+    console.log(message.content());
+    resolve(this);
+  })
+  .spawn("add", Behaviors.adder)
+  .send("foreward", ["print", "hey"])
+  .send("add", 1)
+  .send("add", "print")
+  .send("add", 2)
+  .send("add", 4)
+  .send("add", "print")

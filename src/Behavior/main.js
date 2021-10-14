@@ -6,10 +6,10 @@ module.exports = class ActorBehavior {
   }
 
   // :: ACTOR, MESSAGE -> PROMISE(BEHAVIOR)
-  // Applies function of behavior to the given ACTOR and MESSAGE:
+  // Applies function of behavior to the given ACTOR and MESSAGE in the context of THIS behavior:
   become(actor, message) {
     return new Promise((resolve, reject) => {
-      this._fn(actor, message, resolve, reject);
+      this._fn.apply(this, [actor, message, resolve, reject]);
     })
   }
 

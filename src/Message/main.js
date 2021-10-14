@@ -7,22 +7,28 @@ module.exports = class ActorMessage {
     this._content = content;    // Value being sent in message
   }
 
-  // :: VOID -> STRING
-  // Returns address of where this message was sent to:
-  address() {
-    return this._address;
+  // :: VOID|(STRING -> *) -> STRING
+  // Applies function address of message, otherwise returns address of where this message was sent to:
+  address(fn) {
+    return typeof(fn) === 'function'
+      ? fn(this._address)
+      : this._address;
   }
 
-  // :: VOID -> ACTOR
-  // Return reference to actor that send this message
-  customer() {
-    return this._customer;
+  // :: VOID|(ACTOR -> *) -> ACTOR|*
+  // Applies function to customer of message, otherwise returns reference to actor that send this message
+  customer(fn) {
+    return typeof(fn) === 'function'
+      ? fn(this._customer)
+      : this._customer;
   }
 
-  // :: VOID -> this._content
-  // Returns value sent in message:
-  content() {
-    return this._content;
+  // :: VOID|(*, STRING -> *) -> this._content|*
+  // Applies function to content of message and it's type, otherwise returns value sent in message:
+  content(fn) {
+    return typeof(fn) === 'function'
+      ? fn(this._content, this.typeOfContent())
+      : this._content;
   }
 
   // :: VOID -> STRING

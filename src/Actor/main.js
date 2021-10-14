@@ -1,28 +1,20 @@
 const ActorMessage = require("../Message/main.js");
+const ActorBehavior = require("../Behavior/main.js");
 
 module.exports = class Actor {
 
   // CONSTRUCTOR :: BEHAVIOR, (OBJECT, ACTOR -> VOID), NUMBER -> this
-  // NOTE: Defualt error handler for processing message consoles error and stops processing message
-  // NOTE: Default duration to check for new message is 100ms
   constructor(behavior, onErr, duration) {
     this._behavior = behavior;           // Behavior of this actor
     this._actors = {};                   // Actor spawned by this actor bound to an ID
     this._queue = [];                    // Messages recieved and not yet processed
-    this.processQueue(                   // Initializes queue
-      onErr === undefined
-        ? (err, actor) =>  {console.log(err)}
-        : onErr,
-      duration === undefined
-        ? 100
-        : duration
-    );
+    this.processQueue();                 // Initializes queue
   }
 
   // :: STRING, BEHAVIOR, (OBJECT, ACTOR -> VOID), NUMBER -> this
   // Creates new actor with given behavior bound to given ID:
   spawn(actorID, behavior, onErr, duration) {
-    this._actors[actorID] = new Actor(behavior, onErr, duration);
+    this._actors[actorID] = Actor.init(behavior, onErr, duration);
     return this;
   }
 
@@ -72,10 +64,23 @@ module.exports = class Actor {
    *
    */
 
-   // :: BEHAVIOR, (OBJECT, ACTOR -> VOID), NUMBER -> ACTOR
+   // :: BEHAVIOR|FUNCTION, (OBJECT, ACTOR -> VOID), NUMBER -> ACTOR
    // Static factor method:
+   // NOTE: If function given for behavior, initailize new instance of ActorBehavior with that function
+   // NOTE: Defualt error handler for processing message consoles error and stops processing message
+   // NOTE: Default duration to check for new message is 100ms
    static init(behavior, onErr, duration) {
-     return new Actor(behavior, onErr, duration);
+     return new Actor(
+       typeof(behavior) === 'function'
+        ? ActorBehavior.init(behavior)
+        : behavior,
+      onErr === undefined
+        ? (err, actor) =>  {console.log(err)}
+        : onErr,
+      duration === undefined
+        ? 100
+        : duration
+     );
    }
 
 }

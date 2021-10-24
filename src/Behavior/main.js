@@ -5,12 +5,10 @@ module.exports = class ActorBehavior {
     this._fn = fn
   }
 
-  // :: ACTOR, MESSAGE -> PROMISE(BEHAVIOR)
+  // :: ACTOR, MESSAGE -> VOID
   // Applies function of behavior to the given ACTOR and MESSAGE in the context of THIS behavior:
-  become(actor, message) {
-    return new Promise((resolve, reject) => {
-      this._fn.apply(this, [actor, message, resolve, reject]);
-    })
+  become(actor, message, next, err) {
+    this._fn.apply(this, [actor, message, next, err]);
   }
 
   /**

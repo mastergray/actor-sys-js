@@ -1,2 +1,2 @@
 # actor-sys-js
-An implementation of actors for JavaScript
+An implementation of the actor model in JavaScript

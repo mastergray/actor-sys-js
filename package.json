@@ -1,7 +1,7 @@
 {
   "name": "actor-sys",
-  "version": "0.0.1",
-  "description": "An implementation of actors for JavaScript",
+  "version": "0.0.2",
+  "description": "An implementation of the actor model in JavaScript",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/mastergray/actor-sys-js.git"
   },
-  "keywords": [],
+  "keywords": ["Actor Model", "Actors", "Cooperative Multitasking", "Concurrency"],
   "author": "mastergray",
   "license": "MIT",
   "bugs": {

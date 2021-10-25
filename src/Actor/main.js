@@ -52,7 +52,7 @@ module.exports = class Actor {
   // Sends first message to actor, which also Initalizes the message queue:
   // NOTE: This throws an exception if an actor does not exist for the given ID:
   // NOTE: If only 1 argument is given, assumes message is being "sent" directly to this instance:
-  // NOTE: Sending messages without calling "start" will mean and messages in queue will remain unread:
+  // NOTE: Sending messages without calling "start" will mean messages in queue will remain unread:
   start(actorID, val) {
     switch (arguments.length) {
       case 1:
